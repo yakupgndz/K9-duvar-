@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>K9 Anı Duvarı - Barkod Okuyucu</title>
+
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="dogs.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    #reader {
+      max-width: 500px;
+      margin: 20px auto;
+      background: white;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>K9 Anı Duvarı</h1>
+
+  <p>Tüp üzerindeki barkodu kameraya gösterin.</p>
+
+  <div id="reader"></div>
+
+  <div id="message"></div>
+
+  <script>
+
+    let alreadyScanned = false;
+
+    function onScanSuccess(decodedText) {
+
+      if (alreadyScanned) {
+        return;
+      }
+
+      const code = decodedText.trim();
+
+      document.getElementById("message").innerText =
+        "Okunan kod: " + code;
+
+      if (dogs[code]) {
+
+        alreadyScanned = true;
+
+        document.getElementById("message").innerText =
+          dogs[code].name + " bulundu. Sayfa açılıyor...";
+
+        window.location.href = dogs[code].page;
+
+      } else {
+
+        document.getElementById("message").innerText =
+          "Bu barkod sisteme kayıtlı değil: " + code;
+      }
+    }
+
+    function onScanFailure(error) {
+      // Barkod bulunana kadar taramaya devam eder.
+    }
+
+    const html5QrCodeScanner = new Html5QrcodeScanner(
+      "reader",
+      {
+        fps: 10,
+        qrbox: {
+          width: 280,
+          height: 140
+        },
+        rememberLastUsedCamera: true,
+        supportedScanTypes: [
+          Html5QrcodeScanType.SCAN_TYPE_CAMERA
+        ]
+      },
+      false
+    );
+
+    html5QrCodeScanner.render(
+      onScanSuccess,
+      onScanFailure
+    );
+
+  </script>
+
+</body>
+</html>
