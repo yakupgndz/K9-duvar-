@@ -1,7 +1,7 @@
 const dogs = {
   "801182278182": {
     name: "Çaça",
-    page: "caca.html"
+    page: "Caca.html"
   },
 
   "801182278120": {
